@@ -1,40 +1,48 @@
 (function(){
     'use strict';
     angular.module('app', [])
-        .controller('MainCtrl', ['$scope','$http', '$rootScope', function($scope,$http, $rootScope){
-            $scope.logout = function(){
-                $http.delete('/api/login').success(function(){
-                    $scope.user = undefined;
-                    $rootScope.$broadcast('logout');
+        .factory('login', function($http){
+            var loginInfo = {};
+            var changes = [];
+            var change = function(data) {
+                changes.forEach(function(fn){
+                    fn(data);
                 });
+                loginInfo.info = data;
+                return loginInfo;
+            }
+            return {
+                login: function(user){
+                    return $http.post('/api/login', user).then(change);
+                },
+                logout: function(){
+                    return $http.delete('/api/login').then(change);
+                },
+                isLogin: function(){
+                    return $http.get('/api/login').then(change);
+                },
+                loginInfo: loginInfo,
+                onchange:function(fn){
+                    changes.push(fn);
+                },
             };
-            $scope.$on('login success', function(e,user){
-                $scope.user = user;
+        })
+        .controller('MainCtrl', ['$scope','login', function($scope,login){
+            login.isLogin();
+            $scope.logout = function(){
+                login.logout();
+            };
+            login.onchange(function(data) {
+                $scope.loginInfo = data.data;
             });
         }])
-        .controller('LoginCtrl', ['$scope', '$http', '$rootScope', function($scope, $http, $rootScope){
+        .controller('LoginCtrl', ['login','$scope', function(login,$scope){
             var self = this;
-            $scope.$on('logout', function(){
-                self.user = undefined;
-            });
-            $http.get('/api/login').success(function(resp){
-                if(resp.username){
-                    self.user = resp;
-                    $rootScope.$broadcast('login success', self.user);
-                }
-
-            });
             self.login = function(user){
-                $http.post('/api/login', user).then(function(data){
-                    if(data.data.username) {
-                        self.user = {username: data.data.username};
-                        $rootScope.$broadcast('login success', self.user);
-                    }
-                    else {
-                        self.msg = data.data.msg;
-                    }
-                    $scope.nu = undefined;
-                });
-            }
+                login.login(user);
+            };
+            login.onchange(function(data) {
+                self.loginInfo = data.data;
+            });
         }])
 })();
