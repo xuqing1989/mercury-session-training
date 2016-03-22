@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+//var RedisStore = require('connect-redis')(session);
+var MongoStore = require('connect-mongo')(session);
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -26,6 +28,7 @@ app.use(session({
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: true,
+    store: new MongoStore({url:'mongodb://localhost/test'}),
 }));
 
 
