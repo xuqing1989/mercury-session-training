@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="libs/jquery/dist/jquery.js"></script>
+        <script src="libs/angular/angular.js"></script>
+        <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.css">
+        <link rel="stylesheet" href="stylesheets/style.css">
+    </head>
+    <body>
+    <div ng-app="test" ng-controller="ctrl">
+        <input ng-model="info">
+        <my-dir info="info"></my-dir>
+    </div>
+    <div ng-app="test1" ng-controller="tempctr">
+        <input ng-model="info1">
+        <you-dir info1="info1"></you-dir>
+    </div>
+    <script src="test.js"></script>
+    </body>
+</html>

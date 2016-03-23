@@ -6,10 +6,10 @@
         <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.css">
         <link rel="stylesheet" href="stylesheets/style.css">
     </head>
-    <body ng-app="app" ng-controller="LoginCtrl as login">
-        <login-form></login-form>
-        <div ng-show="!!login.loginInfo.username">Welcome, {{login.loginInfo.username}}.
-            <a class="btn btn-danger" ng-click="login.logout()">Logout</a>
+    <body ng-app="app" ng-controller="LoginCtrl">
+        <login-form ng-show="!loginInfo.username" info2="loginInfo" login2="onLogin(info)"></login-form>
+        <div ng-show="!!loginInfo.username">Welcome, {{loginInfo.username}}.
+            <a class="btn btn-danger" ng-click="logout()">Logout</a>
         </div>
         <script src="app.js"></script>
     </body>

@@ -1,25 +1,34 @@
 (function(){
     'use strict';
     angular.module('app', [])
-        .controller('LoginCtrl', ['$scope', '$http', function($scope, $http){
-            var self = this;
+        .controller('LoginCtrl', ['$scope', '$http', function(scope, $http){
             $http.get('/api/login').success(function(resp){
-                self.loginInfo = resp;
+                scope.loginInfo = resp;
             });
-            self.login = function(user){
-                $http.post('/api/login', user).then(function(data){
-                    self.loginInfo = data.data;
-                });
-            }
-            self.logout = function(){
+            scope.logout = function(){
                 $http.delete('/api/login').success(function(){
-                    self.loginInfo = {};
+                    scope.loginInfo = {};
                 });
             };
+            scope.onLogin = function(info){
+                scope.loginInfo = info;
+            };
         }])
-        .directive('loginForm',function() {
+        .directive('loginForm',function($http) {
             return {
                 templateUrl: 'login.html',
+                scope: {
+                    info:"=info2",
+                    login2: '&',
+                },
+                controller:['$scope', function(scope) {
+                    scope.login = function(user){
+                        $http.post('/api/login', user).then(function(data){
+                            //scope.info = data.data;
+                            scope.login2({info:data.data});
+                        });
+                    }
+                }],
             };
         });
 })();
