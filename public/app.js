@@ -16,5 +16,10 @@
                     self.loginInfo = {};
                 });
             };
-    }])
+        }])
+        .directive('loginForm',function() {
+            return {
+                templateUrl: 'login.html',
+            };
+        });
 })();

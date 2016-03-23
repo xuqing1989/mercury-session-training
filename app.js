@@ -9,6 +9,10 @@ var session = require('express-session');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+var session = require('express-session');
+//var RedisStore = require('connect-redis')(session);
+var MongoStore = require('connect-mongo')(session);
+
 var app = express();
 
 // view engine setup
@@ -27,7 +31,12 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
 }));
-
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    store: new MongoStore({url:'mongodb://localhost/test'}),
+}));
 
 app.use('/', routes);
 app.use('/users', users);
