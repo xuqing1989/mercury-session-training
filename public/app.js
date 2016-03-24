@@ -1,19 +1,15 @@
 (function(){
     'use strict';
-    angular.module('app', [])
-        .controller('LoginCtrl', ['$scope', '$http', function(scope, $http){
-            $http.get('/api/login').success(function(resp){
-                scope.loginInfo = resp;
+    angular.module('app', ['ngRoute'])
+        .config(function($routeProvider){
+            $routeProvider.when('/page1',{
+                templateUrl:'page1.html',
+                controller:'page1Ctrl',
+            }).when('/page2',{
+                templateUrl: 'page2.html',
+                controller:'page2Ctrl',
             });
-            scope.logout = function(){
-                $http.delete('/api/login').success(function(){
-                    scope.loginInfo = {};
-                });
-            };
-            scope.onLogin = function(info){
-                scope.loginInfo = info;
-            };
-        }])
+        })
         .directive('loginForm',function($http) {
             return {
                 templateUrl: 'login.html',
