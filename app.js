@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 //var RedisStore = require('connect-redis')(session);
 var MongoStore = require('connect-mongo')(session);
+var db = require('mongodb').MongoClient.connect('mongodb://localhost/test');
+var passport = require('passport');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -31,10 +33,12 @@ app.use(session({
     store: new MongoStore({url:'mongodb://localhost/test'}),
 }));
 
+//for passport
+app.use(passport.initialize());
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/api/login',require('./routes/login'));
+app.use('/api/login', require('./routes/login'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
